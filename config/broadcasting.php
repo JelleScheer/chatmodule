@@ -30,7 +30,6 @@ return [
 
     'connections' => [
 
-        /*
         'pusher' => [
             'driver' => 'pusher',
             'key' => env('PUSHER_APP_KEY'),
@@ -44,8 +43,8 @@ return [
                 'scheme' => 'http'
             ],
         ],
-        */
 
+        /*
         'pusher' => [
             'driver' => 'pusher',
             'key' => env('PUSHER_APP_KEY'),
@@ -56,6 +55,7 @@ return [
                 'encrypted' => true,
             ],
         ],
+        */
 
         'redis' => [
             'driver' => 'redis',
