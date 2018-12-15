@@ -30,6 +30,22 @@ return [
 
     'connections' => [
 
+        /*
+        'pusher' => [
+            'driver' => 'pusher',
+            'key' => env('PUSHER_APP_KEY'),
+            'secret' => env('PUSHER_APP_SECRET'),
+            'app_id' => env('PUSHER_APP_ID'),
+            'options' => [
+                'cluster' => env('PUSHER_APP_CLUSTER'),
+                'encrypted' => false,
+                'host' => '188.166.24.201',
+                'port' => 6001,
+                'scheme' => 'http'
+            ],
+        ],
+        */
+
         'pusher' => [
             'driver' => 'pusher',
             'key' => env('PUSHER_APP_KEY'),

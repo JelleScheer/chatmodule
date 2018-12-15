@@ -54,3 +54,17 @@ if (token) {
 //     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
 //     encrypted: true
 // });
+
+import Echo from "laravel-echo"
+
+window.Pusher = require('pusher-js');
+
+window.Echo = new Echo({
+    cluster: 'eu', //
+    broadcaster: 'pusher',
+    key: '1e8e907211f7c9c3d4a1',
+    encrypted: true, //
+    //wsHost: window.location.hostname,
+    //wsPort: 6001,
+    //disableStats: true,
+});

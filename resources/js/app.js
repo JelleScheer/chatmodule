@@ -8,6 +8,7 @@
 require('./bootstrap');
 
 window.Vue = require('vue');
+import store from './lib/Store.js';
 
 /**
  * The following block of code may be used to automatically register your
@@ -17,10 +18,11 @@ window.Vue = require('vue');
  * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
  */
 
-// const files = require.context('./', true, /\.vue$/i)
-// files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key)))
+const files = require.context('./', true, /\.vue$/i)
+files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key)))
 
-Vue.component('example-component', require('./components/ExampleComponent.vue'));
+Vue.component('chats', require('./components/Chats.vue'));
+Vue.component('chat', require('./components/Chat.vue'));
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -28,6 +30,14 @@ Vue.component('example-component', require('./components/ExampleComponent.vue'))
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
+Vue.config.productionTip = false;
+Vue.config.devtools = false;
+Vue.config.debug = false;
+Vue.config.silent = true;
+
 const app = new Vue({
-    el: '#app'
+    el: '#app',
+    store
 });
+
+window.Store = store;
