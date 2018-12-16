@@ -2,7 +2,7 @@
 
 namespace App\Events;
 
-use App\Message;
+use App\Chat;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Broadcasting\PrivateChannel;
@@ -11,22 +11,22 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class NewComment implements ShouldBroadcast
+class DeleteChat implements ShouldBroadcast
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels;
+    use Dispatchable, InteractsWithSockets;
     /**
-     * @var Message
+     * @var Chat
      */
-    public $message;
+    public $chat;
 
     /**
      * Create a new event instance.
      *
-     * @return void
+     * @param Chat $chat
      */
-    public function __construct(Message $message)
+    public function __construct(Chat $chat)
     {
-        $this->message = $message;
+        $this->chat = $chat;
     }
 
     /**
@@ -36,6 +36,6 @@ class NewComment implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('comments.'.$this->message->chat_id);
+        return new Channel('chat.deleted');
     }
 }

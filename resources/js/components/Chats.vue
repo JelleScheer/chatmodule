@@ -38,6 +38,7 @@
 
         mounted() {
             this.fetchChats();
+            this.initBroadcastListeners();
         },
 
 
@@ -46,6 +47,19 @@
                 axios.get('/fetchChats/').then(response => {
                     this.$store.commit('setChats', response.data);
                 });
+            },
+
+            initBroadcastListeners() {
+                Echo.channel('chat.list')
+                    .listen('CreateChat', (e) => {
+                        this.$store.commit('addRoom', e);
+                    });
+
+                Echo.channel('chat.deleted')
+                    .listen('DeleteChat', (e) => {
+                        let chat = this.$store.getters.getRoomId(e.chat.id);
+                        this.$store.commit('deleteRoom', chat);
+                    });
             },
         }
     }

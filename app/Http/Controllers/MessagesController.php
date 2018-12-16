@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\NewComment;
+use App\Events\NewMessage;
 use App\Message;
 use App\Chat;
 use App\User;
@@ -49,8 +49,6 @@ class MessagesController extends Controller
      */
     public function store(Request $request, Chat $chat)
     {
-        //$chat->addMessage($request, $chat);
-
         $message = new Message();
 
         $message->fill($request->all());
@@ -60,9 +58,7 @@ class MessagesController extends Controller
 
         $message->save();
 
-        event(New NewComment($message));
-
-        //broadcast(new MessageSent());
+        event(New NewMessage($message, auth()->user()));
 
         return response()->json(['status' => 200]);
     }

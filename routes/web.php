@@ -19,6 +19,8 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
+Route::get('/user', 'AuthController@index');
+
 Route::get('/fetchChats', 'ChatsController@fetchChats');
 Route::get('/activeChat/{chat}', 'ChatsController@getActiveChat');
 Route::resource('chats', 'ChatsController');

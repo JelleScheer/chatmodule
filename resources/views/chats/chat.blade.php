@@ -4,7 +4,7 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8">
-                <chat id="{{ $chat->id }}"></chat>
+                <chat id="{{ $chat->id }}" owner-id="{{ $chat->user_id }}"></chat>
             </div>
         </div>
     </div>

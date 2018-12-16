@@ -37,7 +37,11 @@ Vue.config.silent = true;
 
 const app = new Vue({
     el: '#app',
-    store
+    store,
+
+    mounted() {
+        this.$store.dispatch('getUser');
+    }
 });
 
 window.Store = store;

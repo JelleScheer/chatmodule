@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Chat;
+use App\Events\CreateChat;
+use App\Events\DeleteChat;
 use Illuminate\Http\Request;
 
 class ChatsController extends Controller
@@ -59,7 +61,9 @@ class ChatsController extends Controller
 
         $chat->save();
 
-        return redirect('chats');
+        event(New CreateChat($chat, auth()->user()));
+
+        return redirect('chats/' . $chat->id);
     }
 
     /**
@@ -110,8 +114,10 @@ class ChatsController extends Controller
      */
     public function destroy(chat $chat)
     {
+        event(New DeleteChat($chat));
+
         $chat->delete();
 
-        return redirect('chats');
+        return response()->json(['status' => 200]);
     }
 }
