@@ -25963,13 +25963,13 @@ module.exports = Vue;
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(56)
+  __webpack_require__(47)
 }
 var normalizeComponent = __webpack_require__(14)
 /* script */
-var __vue_script__ = __webpack_require__(47)
+var __vue_script__ = __webpack_require__(52)
 /* template */
-var __vue_template__ = __webpack_require__(60)
+var __vue_template__ = __webpack_require__(53)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -26123,9 +26123,9 @@ module.exports = function normalizeComponent (
 var disposed = false
 var normalizeComponent = __webpack_require__(14)
 /* script */
-var __vue_script__ = __webpack_require__(49)
+var __vue_script__ = __webpack_require__(54)
 /* template */
-var __vue_template__ = __webpack_require__(50)
+var __vue_template__ = __webpack_require__(55)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -26168,7 +26168,7 @@ module.exports = Component.exports
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(17);
-module.exports = __webpack_require__(51);
+module.exports = __webpack_require__(56);
 
 
 /***/ }),
@@ -58782,312 +58782,46 @@ webpackContext.id = 46;
 
 /***/ }),
 /* 47 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vuex__ = __webpack_require__(3);
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    name: 'Chats',
-
-    data: function data() {
-        return {
-            newMessage: '',
-            users: [],
-            typingUsers: [],
-            typingUsersIds: []
-        };
-    },
-
-
-    props: {
-        id: {
-            required: true
-        },
-        ownerId: {
-            required: true
-        }
-    },
-
-    computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["b" /* mapState */])(['activeChat', 'messages', 'user'])),
-
-    mounted: function mounted() {
-        this.$store.dispatch('getActiveChat', this.id);
-        this.$store.dispatch('fetchMessages', this.id);
-
-        this.initBroadcastListeners();
-    },
-
-
-    methods: {
-        sendMessage: function sendMessage() {
-            if (this.newMessage.length > 0) {
-                var message = {
-                    body: this.newMessage
-                };
-
-                this.$store.commit('addMessage', message);
-
-                this.newMessage = '';
-
-                this.$store.dispatch('sendNewMessage', { id: this.id, message: message });
-            }
-        },
-        sendTypingEvent: function sendTypingEvent() {
-            if (this.newMessage.length > 0) {
-                Echo.join('chat.' + this.id).whisper('typing', this.user);
-            } else {
-                Echo.join('chat.' + this.id).whisper('stoppedTyping', this.user);
-            }
-        },
-        initBroadcastListeners: function initBroadcastListeners() {
-            var _this = this;
-
-            Echo.private('messages.' + this.id).listen('NewMessage', function (e) {
-                if (e.user.id !== _this.user.id) {
-                    _this.$store.commit('addEventMessage', e);
-                }
-            });
-
-            Echo.channel('chat.deleted').listen('DeleteChat', function (e) {
-                if (e.chat.id == _this.id) {
-                    _this.$store.commit('deleteCurrentRoom');
-                }
-            });
-
-            Echo.join('chat.' + this.id).here(function (users) {
-                _this.users = users;
-            }).joining(function (user) {
-                _this.users.push(user);
-            }).leaving(function (user) {
-                _this.users = _this.users.filter(function (u) {
-                    return u.id !== user.id;
-                });
-
-                _this.removeTypingUser(user);
-            }).listenForWhisper('typing', function (user) {
-                if (!_this.typingUsersIds.includes(user.id)) {
-                    _this.typingUsers.push(user);
-                    _this.typingUsersIds.push(user.id);
-                }
-            }).listenForWhisper('stoppedTyping', function (user) {
-                _this.removeTypingUser(user);
-            });
-        },
-        removeTypingUser: function removeTypingUser(user) {
-            if (this.typingUsersIds.includes(user.id)) {
-                this.typingUsers = this.typingUsers.filter(function (u) {
-                    return u.id !== user.id;
-                });
-                this.typingUsersIds = this.typingUsersIds.filter(function (u) {
-                    return u !== user.id;
-                });
-            }
-        },
-        deleteRoom: function deleteRoom() {
-            this.$store.dispatch('deleteCurrentRoom', this.id);
-        }
-    }
-});
-
-/***/ }),
-/* 48 */,
-/* 49 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vuex__ = __webpack_require__(3);
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    name: 'Chats',
-
-    computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["b" /* mapState */])(['chats'])),
-
-    mounted: function mounted() {
-        this.fetchChats();
-        this.initBroadcastListeners();
-    },
-
-
-    methods: {
-        fetchChats: function fetchChats() {
-            var _this = this;
-
-            axios.get('/fetchChats/').then(function (response) {
-                _this.$store.commit('setChats', response.data);
-            });
-        },
-        initBroadcastListeners: function initBroadcastListeners() {
-            var _this2 = this;
-
-            Echo.channel('chat.list').listen('CreateChat', function (e) {
-                _this2.$store.commit('addRoom', e);
-            });
-
-            Echo.channel('chat.deleted').listen('DeleteChat', function (e) {
-                var chat = _this2.$store.getters.getRoomId(e.chat.id);
-                _this2.$store.commit('deleteRoom', chat);
-            });
-        }
-    }
-});
-
-/***/ }),
-/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "card" }, [
-    _c("div", { staticClass: "card-header font-weight-bold" }, [
-      _vm._v("Active chatrooms")
-    ]),
-    _vm._v(" "),
-    _c(
-      "div",
-      { staticClass: "card-body" },
-      [
-        _vm._l(_vm.chats, function(chat) {
-          return _vm.chats.length > 0
-            ? [
-                _c("a", { attrs: { href: "/chats/" + chat.id } }, [
-                  _vm._v(
-                    "\n                " + _vm._s(chat.name) + "\n            "
-                  )
-                ]),
-                _vm._v(" "),
-                _c("span", [_vm._v("by " + _vm._s(chat.user.name))]),
-                _vm._v(" "),
-                _c("br")
-              ]
-            : [_vm._v("\n            No active chatrooms found.\n        ")]
-        })
-      ],
-      2
-    ),
-    _vm._v(" "),
-    _vm._m(0)
-  ])
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "card-footer" }, [
-      _c("a", { attrs: { href: "/chats/create" } }, [
-        _vm._v("Create a chatroom")
-      ])
-    ])
-  }
-]
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-33f2cb40", module.exports)
-  }
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(48);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(50)("721a21c7", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../node_modules/css-loader/index.js!../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-0d66c37a\",\"scoped\":true,\"hasInlineConfig\":true}!../../../node_modules/sass-loader/lib/loader.js!../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Chat.vue", function() {
+     var newContent = require("!!../../../node_modules/css-loader/index.js!../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-0d66c37a\",\"scoped\":true,\"hasInlineConfig\":true}!../../../node_modules/sass-loader/lib/loader.js!../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Chat.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
 }
 
 /***/ }),
-/* 51 */
-/***/ (function(module, exports) {
+/* 48 */
+/***/ (function(module, exports, __webpack_require__) {
 
-// removed by extract-text-webpack-plugin
+exports = module.exports = __webpack_require__(49)(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n.active-member[data-v-0d66c37a] {\n  color: #c7c7c7;\n  padding-right: 5px;\n}\n", ""]);
+
+// exports
+
 
 /***/ }),
-/* 52 */,
-/* 53 */
+/* 49 */
 /***/ (function(module, exports) {
 
 /*
@@ -59169,49 +58903,7 @@ function toComment(sourceMap) {
 
 
 /***/ }),
-/* 54 */,
-/* 55 */,
-/* 56 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(57);
-if(typeof content === 'string') content = [[module.i, content, '']];
-if(content.locals) module.exports = content.locals;
-// add the styles to the DOM
-var update = __webpack_require__(58)("721a21c7", content, false, {});
-// Hot Module Replacement
-if(false) {
- // When the styles change, update the <style> tags
- if(!content.locals) {
-   module.hot.accept("!!../../../node_modules/css-loader/index.js!../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-0d66c37a\",\"scoped\":true,\"hasInlineConfig\":true}!../../../node_modules/sass-loader/lib/loader.js!../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Chat.vue", function() {
-     var newContent = require("!!../../../node_modules/css-loader/index.js!../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-0d66c37a\",\"scoped\":true,\"hasInlineConfig\":true}!../../../node_modules/sass-loader/lib/loader.js!../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Chat.vue");
-     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-     update(newContent);
-   });
- }
- // When the module is disposed, remove the <style> tags
- module.hot.dispose(function() { update(); });
-}
-
-/***/ }),
-/* 57 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(53)(false);
-// imports
-
-
-// module
-exports.push([module.i, "\n.active-member[data-v-0d66c37a] {\n  color: #c7c7c7;\n  padding-right: 5px;\n}\n", ""]);
-
-// exports
-
-
-/***/ }),
-/* 58 */
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -59230,7 +58922,7 @@ if (typeof DEBUG !== 'undefined' && DEBUG) {
   ) }
 }
 
-var listToStyles = __webpack_require__(59)
+var listToStyles = __webpack_require__(51)
 
 /*
 type StyleObject = {
@@ -59439,7 +59131,7 @@ function applyToTag (styleElement, obj) {
 
 
 /***/ }),
-/* 59 */
+/* 51 */
 /***/ (function(module, exports) {
 
 /**
@@ -59472,7 +59164,174 @@ module.exports = function listToStyles (parentId, list) {
 
 
 /***/ }),
-/* 60 */
+/* 52 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vuex__ = __webpack_require__(3);
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    name: 'Chats',
+
+    data: function data() {
+        return {
+            newMessage: '',
+            users: [],
+            typingUsers: [],
+            typingUsersIds: []
+        };
+    },
+
+
+    props: {
+        id: {
+            required: true
+        },
+        ownerId: {
+            required: true
+        }
+    },
+
+    computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["b" /* mapState */])(['activeChat', 'messages', 'user'])),
+
+    mounted: function mounted() {
+        this.$store.dispatch('getActiveChat', this.id);
+        this.$store.dispatch('fetchMessages', this.id);
+
+        this.initBroadcastListeners();
+    },
+
+
+    methods: {
+        sendMessage: function sendMessage() {
+            if (this.newMessage.length > 0) {
+                var message = {
+                    body: this.newMessage
+                };
+
+                this.$store.commit('addMessage', message);
+
+                this.newMessage = '';
+
+                this.$store.dispatch('sendNewMessage', { id: this.id, message: message });
+            }
+        },
+        sendTypingEvent: function sendTypingEvent() {
+            if (this.newMessage.length > 0) {
+                Echo.join('chat.' + this.id).whisper('typing', this.user);
+            } else {
+                Echo.join('chat.' + this.id).whisper('stoppedTyping', this.user);
+            }
+        },
+        initBroadcastListeners: function initBroadcastListeners() {
+            var _this = this;
+
+            Echo.private('messages.' + this.id).listen('NewMessage', function (e) {
+                if (e.user.id !== _this.user.id) {
+                    _this.$store.commit('addEventMessage', e);
+                    _this.removeTypingUser(e.user);
+                }
+            });
+
+            Echo.channel('chat.deleted').listen('DeleteChat', function (e) {
+                if (e.chat.id == _this.id) {
+                    _this.$store.commit('deleteCurrentRoom');
+                }
+            });
+
+            Echo.join('chat.' + this.id).here(function (users) {
+                _this.users = users;
+            }).joining(function (user) {
+                _this.users.push(user);
+            }).leaving(function (user) {
+                _this.users = _this.users.filter(function (u) {
+                    return u.id !== user.id;
+                });
+
+                _this.removeTypingUser(user);
+            }).listenForWhisper('typing', function (user) {
+                if (!_this.typingUsersIds.includes(user.id)) {
+                    _this.typingUsers.push(user);
+                    _this.typingUsersIds.push(user.id);
+                }
+            }).listenForWhisper('stoppedTyping', function (user) {
+                _this.removeTypingUser(user);
+            });
+        },
+        removeTypingUser: function removeTypingUser(user) {
+            if (this.typingUsersIds.includes(user.id)) {
+                this.typingUsers = this.typingUsers.filter(function (u) {
+                    return u.id !== user.id;
+                });
+                this.typingUsersIds = this.typingUsersIds.filter(function (u) {
+                    return u !== user.id;
+                });
+            }
+        },
+        deleteRoom: function deleteRoom() {
+            this.$store.dispatch('deleteCurrentRoom', this.id);
+        }
+    }
+});
+
+/***/ }),
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -59616,6 +59475,144 @@ if (false) {
     require("vue-hot-reload-api")      .rerender("data-v-0d66c37a", module.exports)
   }
 }
+
+/***/ }),
+/* 54 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vuex__ = __webpack_require__(3);
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    name: 'Chats',
+
+    computed: _extends({}, Object(__WEBPACK_IMPORTED_MODULE_0_vuex__["b" /* mapState */])(['chats'])),
+
+    mounted: function mounted() {
+        this.fetchChats();
+        this.initBroadcastListeners();
+    },
+
+
+    methods: {
+        fetchChats: function fetchChats() {
+            var _this = this;
+
+            axios.get('/fetchChats/').then(function (response) {
+                _this.$store.commit('setChats', response.data);
+            });
+        },
+        initBroadcastListeners: function initBroadcastListeners() {
+            var _this2 = this;
+
+            Echo.channel('chat.list').listen('CreateChat', function (e) {
+                _this2.$store.commit('addRoom', e);
+            });
+
+            Echo.channel('chat.deleted').listen('DeleteChat', function (e) {
+                var chat = _this2.$store.getters.getRoomId(e.chat.id);
+                _this2.$store.commit('deleteRoom', chat);
+            });
+        }
+    }
+});
+
+/***/ }),
+/* 55 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "card" }, [
+    _c("div", { staticClass: "card-header font-weight-bold" }, [
+      _vm._v("Active chatrooms")
+    ]),
+    _vm._v(" "),
+    _c(
+      "div",
+      { staticClass: "card-body" },
+      [
+        _vm._l(_vm.chats, function(chat) {
+          return _vm.chats.length > 0
+            ? [
+                _c("a", { attrs: { href: "/chats/" + chat.id } }, [
+                  _vm._v(
+                    "\n                " + _vm._s(chat.name) + "\n            "
+                  )
+                ]),
+                _vm._v(" "),
+                _c("span", [_vm._v("by " + _vm._s(chat.user.name))]),
+                _vm._v(" "),
+                _c("br")
+              ]
+            : [_vm._v("\n            No active chatrooms found.\n        ")]
+        })
+      ],
+      2
+    ),
+    _vm._v(" "),
+    _vm._m(0)
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "card-footer" }, [
+      _c("a", { attrs: { href: "/chats/create" } }, [
+        _vm._v("Create a chatroom")
+      ])
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-33f2cb40", module.exports)
+  }
+}
+
+/***/ }),
+/* 56 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
 
 /***/ })
 /******/ ]);

@@ -118,6 +118,7 @@
                     .listen('NewMessage', (e) => {
                         if(e.user.id !== this.user.id) {
                             this.$store.commit('addEventMessage', e);
+                            this.removeTypingUser(e.user);
                         }
                     });
 
