@@ -74,9 +74,13 @@ class ChatsController extends Controller
      */
     public function show(chat $chat)
     {
-        $messages = $chat->messages;
+        if($chat->participants->contains(auth()->user())) {
+            $messages = $chat->messages;
 
-        return view('chats.chat', compact('chat', 'messages'));
+            return view('chats.chat', compact('chat', 'messages'));
+        } else {
+            return redirect('/chats/');
+        }
     }
 
     public function getActiveChat(chat $chat) {

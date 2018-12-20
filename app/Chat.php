@@ -3,7 +3,6 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Events\NewMessage;
 use Illuminate\Http\Request;
 
 class Chat extends Model
@@ -16,5 +15,9 @@ class Chat extends Model
 
     public function user() {
         return $this->belongsTo(User::class);
+    }
+
+    public function participants() {
+        return $this->belongsToMany(User::class, 'chat_participants');
     }
 }
