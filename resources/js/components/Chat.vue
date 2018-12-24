@@ -1,11 +1,12 @@
 <template>
-    <div class="card">
+    <div class="chat-content flex flex-full-height flex-column">
         <template v-if="activeChat">
-            <div class="card-body">
+            <div class="flex flex-1 flex-items-end flex-align-content-end card-inner">
                 <template v-for="message in messages">
-                    <b>{{ message.user.name }}: </b>
-                    {{ message.body }}
-                    <br />
+                    <div class="message flex flex-full-width">
+                        <span><b>{{ message.user.name }}:</b></span>
+                        <p>{{ message.body }}</p>
+                    </div>
                 </template>
                 <template v-if="typingUsers.length > 0">
                 <span style="color: #c7c7c7">
@@ -16,22 +17,9 @@
                 </template>
             </div>
 
-            <div class="card-footer">
-                <input type="text" v-model="newMessage" @keyup="sendTypingEvent" placeholder="Your message">
-                <button @click="sendMessage">Send</button>
-                <br />
-                Active members: <span class="active-member" v-for="user in users">{{ user.name }}</span>
-                <br />
-                <button @click="leaveRoom">Leave chat</button>
-
-                <!--@if(Auth::id() === $chat->user_id)
-                <form method="post" action="/chats/{{ $chat->id }}">
-                    @csrf
-                    @method('DELETE')
-
-                    <button type="submit">Delete chatroom</button>
-                </form>
-                @endif-->
+            <div class="flex flex-center-vh card-inner chat-input">
+                <input class="flex-1" type="text" v-model="newMessage" @keyup="sendTypingEvent($event)" placeholder="Your message">
+                <i class="fa fa-paper-plane hover-opacity" @click="sendMessage"></i>
             </div>
         </template>
         <template v-else>
@@ -60,14 +48,6 @@
         },
 
         props: {
-            /*
-            id: {
-                required: true
-            },
-            ownerId: {
-                required: true
-            }
-            */
             chat: {
                 required: true,
             }
@@ -82,9 +62,6 @@
         },
 
         mounted() {
-            //this.$store.dispatch('getActiveChat', this.id);
-            //this.$store.dispatch('fetchMessages', this.id);
-
             this.$store.dispatch('fetchMessages', this.chat.id);
 
             this.initBroadcastListeners();
@@ -105,10 +82,16 @@
                 }
             },
 
-            sendTypingEvent() {
+            sendTypingEvent(e) {
+                let keycode = e.keyCode;
+
                 if(this.newMessage.length > 0) {
                     Echo.join('chat.' + this.chat.id)
                         .whisper('typing', this.user);
+
+                    if(keycode === 13) {
+                        this.sendMessage();
+                    }
                 } else {
                     Echo.join('chat.' + this.chat.id)
                         .whisper('stoppedTyping', this.user);
@@ -166,10 +149,6 @@
             deleteRoom() {
                 this.$store.dispatch('deleteCurrentRoom', this.chat.id);
             },
-
-            leaveRoom() {
-                this.$store.dispatch('leaveCurrentRoom', this.chat.id);
-            }
         },
     }
 </script>

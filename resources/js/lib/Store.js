@@ -1,9 +1,10 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import ActiveData from './ActiveData-v0.3.1'
 
 Vue.use(Vuex);
 
-const state = {
+let state = {
     user: false,
     chats: [],
     activeChat: false,
@@ -11,26 +12,50 @@ const state = {
     activeChats: [],
     activeChatsIds: [],
     activeChatUsers: [],
+    //activedata
+    route_active_data_models: {},
+    loaded_active_data_sets: [],
+    require_active_data_models_called: false,
+    required_active_data_models: [],
+    required_active_data_model_are_loaded: false,
 };
 
-const getters = {
+let getters = {
     getRoomId: (state) => (id) => {
         return state.chats.map(chat => chat.id).indexOf(id);
     }
 };
 
-const mutations = {
+let mutations = {
     setChats(state, payload) {
-        state.chats = payload.chats;
-        state.activeChats = payload.userChats;
+        //state.chats = payload.chats;
+
+        //state.activeChats = payload.userChats;
+
+        var data_models = [
+            {
+                model: 'Chat',
+                source: 'chats',
+            },
+        ];
+
+        ActiveDataStore.activeDataSetup(data_models, payload);
+
+        console.log(state.chats);
     },
 
     setActiveChat(state, payload) {
-        state.activeChat = payload;
+        //state.activeChat = payload;
+    },
+
+    addToActiveChats(state, payload) {
+        //state.activeChats.unshift(payload);
+        //state.activeChatsIds.push(payload.id);
+        //state.activeChat = payload;
     },
 
     setMessages(state, payload) {
-        state.messages = payload;
+        //state.messages = payload;
     },
 
     addEventMessage(state, payload) {
@@ -79,7 +104,7 @@ const mutations = {
     }
 };
 
-const actions = {
+let actions = {
     getActiveChat(context, payload) {
         axios.get('/activeChat/' + payload).then(response => {
             context.commit('setActiveChat', response.data);
@@ -120,8 +145,27 @@ const actions = {
                 alert('leaving');
             }
         });
+    },
+
+    joinRoom(context, payload) {
+        axios.post('/chats/' + payload.id + '/join').then(response => {
+            if(response.status === 200) {
+                context.commit('addToActiveChats', payload);
+            }
+        });
+    },
+
+    fetchChats(context) {
+        axios.get('/fetchChats/').then(response => {
+            console.log(response);
+            context.commit('setChats', response.data);
+        });
     }
 };
+
+getters = ActiveDataStore.mergeStoreProperties(getters, 'getters');
+mutations = ActiveDataStore.mergeStoreProperties(mutations, 'mutations');
+actions = ActiveDataStore.mergeStoreProperties(actions, 'actions');
 
 export default new Vuex.Store({
     state,

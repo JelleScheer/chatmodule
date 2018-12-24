@@ -10,6 +10,7 @@ require('./bootstrap');
 window.Vue = require('vue');
 import store from './lib/Store.js';
 import "@fortawesome/fontawesome-pro/css/all.css"
+import ActiveData from './lib/ActiveData-v0.3.1'
 
 /**
  * The following block of code may be used to automatically register your
@@ -31,10 +32,18 @@ Vue.component('chat', require('./components/Chat.vue'));
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
+require('./models/Chat');
+require('./models/Message');
+
 Vue.config.productionTip = false;
 Vue.config.devtools = false;
 Vue.config.debug = false;
 Vue.config.silent = true;
+
+window.pluralize = require('pluralize');
+
+window.Store = store;
+ActiveDataStore = new ActiveDataStore();
 
 const app = new Vue({
     el: '#app',
@@ -42,7 +51,44 @@ const app = new Vue({
 
     mounted() {
         this.$store.dispatch('getUser');
+
+        /*
+        let response = {
+            data: [
+                {
+                    id: 1,
+                    body: 'test',
+                    chat_id: 5,
+                }
+            ]
+        };
+
+        var data_models = [
+            {
+                model: 'Message',
+                source: 'data',
+            },
+        ];
+
+        ActiveDataStore.activeDataSetup(data_models, response);
+
+        let response2 = {
+            data: [
+                {
+                    id: 5,
+                    name: 'testchat',
+                }
+            ]
+        };
+
+        var data_models2 = [
+            {
+                model: 'Chat',
+                source: 'data',
+            },
+        ];
+
+        ActiveDataStore.activeDataSetup(data_models2, response2);
+        */
     }
 });
-
-window.Store = store;

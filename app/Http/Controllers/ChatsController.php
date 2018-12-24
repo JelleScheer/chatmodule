@@ -57,32 +57,13 @@ class ChatsController extends Controller
         return response()->json(['status' => 200, 'chat' => $chat]);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\chat  $chat
-     * @return \Illuminate\Http\Response
-     */
-    public function show(chat $chat)
-    {
-        //$messages = $chat->messages;
-
-        return view('chats.chat', compact('chat'));
-    }
-
+    /*
     public function getActiveChat(chat $chat) {
-        /*
-        $isParticipant = $chat->participants()->where('user_id', auth()->user()->id)->exists();
-
-        if($isParticipant === false) {
-            $chat->participants()->save(auth()->user());
-        }
-        */
-
         $chat->users()->attach(auth()->user()->id);
 
         return $chat;
     }
+    */
 
     /**
      * Show the form for editing the specified resource.
@@ -122,9 +103,14 @@ class ChatsController extends Controller
         return response()->json(['status' => 200]);
     }
 
+    public function join(chat $chat) {
+        $chat->users()->attach(auth()->user()->id);
+
+        return response()->json(['status' => 200]);
+    }
+
     public function leave(chat $chat)
     {
-        //$chat->participants()->detach(auth()->user()->id);
         $chat->users()->detach(auth()->user()->id);
 
         return response()->json(['status' => 200]);

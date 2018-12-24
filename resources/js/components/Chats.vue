@@ -9,10 +9,13 @@
                     </div>
                 </div>
                 <div class="flex flex-center-v flex-3 active-chats">
-                    <div class="active-chats-wrapper flex flex-full-width flex-end">
+                    <div class="active-chats-wrapper flex flex-1 flex-end">
                         <span v-for="chat in activeChats" @click="showChat(chat)" class="chat" :class="{'active-chat': chat.id === activeChat.id}">
                             {{ chat.name }}
                         </span>
+                    </div>
+                    <div class="chat-actions" v-if="activeChat">
+                        <i class="fa fa-door-open leave-chat hover-opacity" @click="leaveRoom"></i>
                     </div>
                 </div>
             </div>
@@ -25,7 +28,7 @@
                     <div class="chats-overview flex-1 overflow-scroll">
                         <template v-if="view === 'chats'">
                             <template v-if="chats.length > 0" v-for="chat in chats">
-                                <div class="chat-preview card-inner hover">
+                                <div class="chat-preview card-inner hover" @click="joinRoom(chat)">
                                     {{ chat.name }}
                                 </div>
                             </template>
@@ -44,7 +47,8 @@
                         </template>
                     </div>
                     <div class="create-chat">
-                        <div class="general-btn">
+                        <div class="subtle-btn flex flex-center-vh">
+                            <i class="far fa-plus"></i>
                             <p @click="openCreateWizard">Create a chatroom</p>
                         </div>
                     </div>
@@ -105,9 +109,7 @@
 
         methods: {
             fetchChats() {
-                axios.get('/fetchChats/').then(response => {
-                    this.$store.commit('setChats', response.data);
-                });
+                this.$store.dispatch('fetchChats');
             },
 
             initBroadcastListeners() {
@@ -147,6 +149,14 @@
             showChat(chat) {
                 this.$store.commit('setActiveChat', chat);
                 this.view = 'users';
+            },
+
+            leaveRoom() {
+                this.$store.dispatch('leaveCurrentRoom', this.activeChat.id);
+            },
+
+            joinRoom(room) {
+                this.$store.dispatch('joinRoom', room);
             }
         }
     }

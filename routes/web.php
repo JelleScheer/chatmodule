@@ -22,9 +22,10 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/user', 'AuthController@index');
 
 Route::get('/fetchChats', 'ChatsController@fetchChats');
-Route::get('/activeChat/{chat}', 'ChatsController@getActiveChat');
+//Route::get('/activeChat/{chat}', 'ChatsController@getActiveChat');
 Route::resource('chats', 'ChatsController');
 Route::post('/chats/{chat}/leave', 'ChatsController@leave');
+Route::post('/chats/{chat}/join', 'ChatsController@join');
 
 Route::get('/chats/{chat}/messages', 'MessagesController@index');
 Route::post('/chats/{chat}/messages', 'MessagesController@store');
