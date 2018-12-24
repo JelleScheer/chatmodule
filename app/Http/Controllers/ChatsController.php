@@ -30,19 +30,10 @@ class ChatsController extends Controller
     }
 
     public function fetchChats() {
-        $chats = Chat::with('User')->get();
+        $chats = Chat::get();
+        $userChats = auth()->user()->chats()->get();
 
-        return compact('chats');
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        return view('chats.create');
+        return compact('chats', 'userChats');
     }
 
     /**
@@ -63,7 +54,7 @@ class ChatsController extends Controller
 
         event(New CreateChat($chat, auth()->user()));
 
-        return redirect('chats/' . $chat->id);
+        return response()->json(['status' => 200, 'chat' => $chat]);
     }
 
     /**
@@ -74,16 +65,22 @@ class ChatsController extends Controller
      */
     public function show(chat $chat)
     {
-        if($chat->participants->contains(auth()->user())) {
-            $messages = $chat->messages;
+        //$messages = $chat->messages;
 
-            return view('chats.chat', compact('chat', 'messages'));
-        } else {
-            return redirect('/chats/');
-        }
+        return view('chats.chat', compact('chat'));
     }
 
     public function getActiveChat(chat $chat) {
+        /*
+        $isParticipant = $chat->participants()->where('user_id', auth()->user()->id)->exists();
+
+        if($isParticipant === false) {
+            $chat->participants()->save(auth()->user());
+        }
+        */
+
+        $chat->users()->attach(auth()->user()->id);
+
         return $chat;
     }
 
@@ -121,6 +118,14 @@ class ChatsController extends Controller
         event(New DeleteChat($chat));
 
         $chat->delete();
+
+        return response()->json(['status' => 200]);
+    }
+
+    public function leave(chat $chat)
+    {
+        //$chat->participants()->detach(auth()->user()->id);
+        $chat->users()->detach(auth()->user()->id);
 
         return response()->json(['status' => 200]);
     }

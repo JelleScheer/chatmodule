@@ -30,7 +30,7 @@ Broadcast::channel('chat.list', function ($user) {
 });
 
 Broadcast::channel('chat.{chat}', function ($user, Chat $chat) {
-    if($chat->participants->contains($user)) {
+    if($chat->users->contains($user)) {
         return $user;
     }
 

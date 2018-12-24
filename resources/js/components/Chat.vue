@@ -1,13 +1,6 @@
 <template>
     <div class="card">
         <template v-if="activeChat">
-            <div class="card-header font-weight-bold">
-                <a href="/chats/">All rooms</a> - {{ activeChat.name }}
-                <template v-if="user.id == ownerId">
-                    <button type="submit" @click="deleteRoom">Delete chatroom</button>
-                </template>
-            </div>
-
             <div class="card-body">
                 <template v-for="message in messages">
                     <b>{{ message.user.name }}: </b>
@@ -15,11 +8,11 @@
                     <br />
                 </template>
                 <template v-if="typingUsers.length > 0">
-                    <span style="color: #c7c7c7">
-                        <template v-for="user in typingUsers">
-                            {{ user.name }}
-                        </template>
-                    is typing...</span>
+                <span style="color: #c7c7c7">
+                    <template v-for="user in typingUsers">
+                        {{ user.name }}
+                    </template>
+                is typing...</span>
                 </template>
             </div>
 
@@ -28,6 +21,8 @@
                 <button @click="sendMessage">Send</button>
                 <br />
                 Active members: <span class="active-member" v-for="user in users">{{ user.name }}</span>
+                <br />
+                <button @click="leaveRoom">Leave chat</button>
 
                 <!--@if(Auth::id() === $chat->user_id)
                 <form method="post" action="/chats/{{ $chat->id }}">
@@ -65,11 +60,16 @@
         },
 
         props: {
+            /*
             id: {
                 required: true
             },
             ownerId: {
                 required: true
+            }
+            */
+            chat: {
+                required: true,
             }
         },
 
@@ -82,8 +82,10 @@
         },
 
         mounted() {
-            this.$store.dispatch('getActiveChat', this.id);
-            this.$store.dispatch('fetchMessages', this.id);
+            //this.$store.dispatch('getActiveChat', this.id);
+            //this.$store.dispatch('fetchMessages', this.id);
+
+            this.$store.dispatch('fetchMessages', this.chat.id);
 
             this.initBroadcastListeners();
         },
@@ -99,22 +101,23 @@
 
                     this.newMessage = '';
 
-                    this.$store.dispatch('sendNewMessage', {id: this.id, message: message});
+                    this.$store.dispatch('sendNewMessage', {id: this.chat.id, message: message});
                 }
             },
 
             sendTypingEvent() {
                 if(this.newMessage.length > 0) {
-                    Echo.join('chat.' + this.id)
+                    Echo.join('chat.' + this.chat.id)
                         .whisper('typing', this.user);
                 } else {
-                    Echo.join('chat.' + this.id)
+                    Echo.join('chat.' + this.chat.id)
                         .whisper('stoppedTyping', this.user);
                 }
             },
 
             initBroadcastListeners() {
-                Echo.private('messages.' + this.id)
+                console.log('y2');
+                Echo.private('messages.' + this.chat.id)
                     .listen('NewMessage', (e) => {
                         if(e.user.id !== this.user.id) {
                             this.$store.commit('addEventMessage', e);
@@ -124,14 +127,15 @@
 
                 Echo.channel('chat.deleted')
                     .listen('DeleteChat', (e) => {
-                        if(e.chat.id == this.id) {
+                        if(e.chat.id == this.chat.id) {
                             this.$store.commit('deleteCurrentRoom');
                         }
                     });
 
-                Echo.join('chat.' + this.id)
+                Echo.join('chat.' + this.chat.id)
                     .here(users => {
-                        this.users = users;
+                        //this.users = users;
+                        this.$store.commit('setActiveChatUsers', users);
                     })
                     .joining(user => {
                         this.users.push(user);
@@ -160,9 +164,13 @@
             },
 
             deleteRoom() {
-                this.$store.dispatch('deleteCurrentRoom', this.id);
+                this.$store.dispatch('deleteCurrentRoom', this.chat.id);
+            },
+
+            leaveRoom() {
+                this.$store.dispatch('leaveCurrentRoom', this.chat.id);
             }
-        }
+        },
     }
 </script>
 

@@ -8,6 +8,9 @@ const state = {
     chats: [],
     activeChat: false,
     messages: [],
+    activeChats: [],
+    activeChatsIds: [],
+    activeChatUsers: [],
 };
 
 const getters = {
@@ -19,6 +22,7 @@ const getters = {
 const mutations = {
     setChats(state, payload) {
         state.chats = payload.chats;
+        state.activeChats = payload.userChats;
     },
 
     setActiveChat(state, payload) {
@@ -68,6 +72,10 @@ const mutations = {
 
     deleteRoom(state, payload) {
         state.chats.splice(payload, 1);
+    },
+
+    setActiveChatUsers(state, payload) {
+        state.activeChatUsers = payload;
     }
 };
 
@@ -102,6 +110,14 @@ const actions = {
         axios.delete('/chats/' + payload).then(response => {
             if(response.status === 200) {
                 context.commit('deleteCurrentRoom');
+            }
+        });
+    },
+
+    leaveCurrentRoom(context, payload) {
+        axios.post('/chats/' + payload + '/leave').then(response => {
+            if(response.status === 200) {
+                alert('leaving');
             }
         });
     }

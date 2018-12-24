@@ -9,6 +9,7 @@ require('./bootstrap');
 
 window.Vue = require('vue');
 import store from './lib/Store.js';
+import "@fortawesome/fontawesome-pro/css/all.css"
 
 /**
  * The following block of code may be used to automatically register your

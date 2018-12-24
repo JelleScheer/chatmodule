@@ -27,4 +27,14 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    /*
+    public function chats() {
+        return $this->hasMany(Chat::class);
+    }
+    */
+
+    public function chats() {
+        return $this->belongsToMany(Chat::class);
+    }
 }
